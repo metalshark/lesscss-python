@@ -1,0 +1,50 @@
+import unittest
+from selector import parse_selector
+
+
+class TestSelector(unittest.TestCase):
+    def test_all(self):
+        '''
+        Wildcard Declarations with an asterisks should be parsed.
+        '''
+        self.assertEqual(parse_selector('* { }').names, ['*'])
+        
+    def test_class(self):
+        '''
+        Class Declarations with a dot at the beginning should be parsed.
+        '''
+        self.assertEqual(parse_selector('.class { }').names, ['.class'])
+        
+    def test_element(self):
+        '''
+        Element Declarations should be parsed.
+        '''
+        self.assertEqual(parse_selector('element { }').names, ['element'])
+        
+    def test_id(self):
+        '''
+        ID Declarations with a hash at the beginning should be parsed.
+        '''
+        self.assertEqual(parse_selector('#hash { }').names, ['#hash'])
+        
+    def test_mixin(self):
+        '''
+        Mixin Declarations should be parsed.
+        '''
+        self.assertRaises(ValueError, parse_selector, '.mixin () { }')
+        
+    def test_multi(self):
+        '''
+        Multiple Declarations should be parsed.
+        '''
+        self.assertEqual(parse_selector('a, b { }').names, ['a', 'b'])
+        
+    def test_nested(self):
+        '''
+        Nested Declarations should be parsed.
+        '''
+        self.assertEqual(parse_selector('a b { }').names, ['a b'])
+
+
+if __name__ == '__main__':
+    unittest.main()
