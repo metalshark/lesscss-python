@@ -51,7 +51,7 @@ def parse_params(less):
     for i in range(length):
         char = less[i]
         
-        if not (char == ',' and not depth):
+        if not (char == ',' and not depth and not delimiter):
             chunk += char
         
         if delimiter:

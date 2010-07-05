@@ -14,11 +14,17 @@ class TestNested(unittest.TestCase):
         self.assertEqual(".b { :h { } } .t { ... } .c { ... } ",
                          parse_nested(".b { :h { } } .t { ... } .c { ... } }"))
         
+    def test_open_brace_in_quotes(self):
+        self.assertEqual('quotes: "}"', parse_nested('quotes: "}"}'))
+        
     def test_double_depth(self):
         self.assertEqual('{a}', parse_nested('{a}}'))
         
     def test_double_depth_spaced(self):
         self.assertEqual(' { a } ', parse_nested(' { a } } '))
+        
+    def test_open_brace_in_quotes(self):
+        self.assertEqual('quotes: "{"', parse_nested('quotes: "{"}'))
 
     def test_single_depth(self):
         self.assertEqual('a', parse_nested('a}'))

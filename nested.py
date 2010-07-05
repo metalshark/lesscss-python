@@ -3,23 +3,33 @@
 
 
 def parse_nested(less):
-    depth = 1
-    
     nested = ''
     
-    while depth:
-        pos = less.find('}') + 1
+    depth = 1
+    
+    delimiter = ''
+    
+    length = len(less)
+
+    for i in range(length):
+        char = less[i]
         
-        if depth and not pos:
-            raise ValueError()
+        if not (char == '}' and not depth and not delimiter):
+            nested += char
         
-        chunk = less[:pos]
-        less = less[pos:]
-        
-        depth += chunk.count('{')
-        
-        depth -= 1
-        
-        nested += chunk
+        if delimiter:
+            if char == delimiter and not less[i - 1] == '\\':
+                delimiter = ''
+        elif char in ('"', "'"):
+            delimiter = char
+        elif char == '{':
+            depth += 1
+        elif char == '}':
+            depth -= 1
+            
+        if not depth and not delimiter and char == '}':
+            break
+    else:
+        raise ValueError
     
     return nested[:-1]
