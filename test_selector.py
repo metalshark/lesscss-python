@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import unittest
 from selector import parse_selector
 
@@ -46,5 +50,16 @@ class TestSelector(unittest.TestCase):
         self.assertEqual(parse_selector('a b { }').names, ['a b'])
 
 
+def suite():
+    test_cases = (TestSelector,)
+    
+    suite = unittest.TestSuite()
+    
+    for tests in map(unittest.TestLoader().loadTestsFromTestCase, test_cases):
+        suite.addTests(tests)
+
+    return suite
+
+
 if __name__ == '__main__':
-    unittest.main()
+    unittest.TextTestRunner(verbosity=2).run(suite())

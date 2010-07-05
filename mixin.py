@@ -1,7 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import re
-from nested import parse_nested
+from nested   import parse_nested
+from params   import Param, parse_params
 from property import Property
-from rules import Rules
+from rules    import Rules
 
 
 MIXIN = re.compile('''
@@ -9,16 +14,20 @@ MIXIN = re.compile('''
         \.
         [a-z 0-9 \- _ \* \s , :]+
     )
+    
     \s*
     
     (
         (?P<param_detect>
             \(
+            
             (?P<params>
                 .*?
             )
-            \)
         )
+        
+        \)
+        
         \s*
     )?
     
@@ -34,58 +43,6 @@ MIXIN = re.compile('''
         }
     )
 ''', re.DOTALL | re.VERBOSE)
-
-
-PARAM = re.compile('''
-    \s*
-    
-    (
-        (?P<name>
-            .+?
-        )
-    
-        \s*
-        
-        :
-        
-        \s*
-    )?
-        
-    (?P<value>
-        [^,]+?
-        (
-            (
-                '[^']*?(?!\\\\)'
-            |
-                "[^"]*?(?!\\\\)"
-            )
-            [^,'"]+?
-        )*?
-    )
-        
-    \s*
-    
-    (
-        ,                              # there may be more than one parameter
-    |
-        $                              # or this may be the last one
-    )
-''', re.DOTALL | re.VERBOSE)
-
-
-def parse_params(less):
-    params = list()
-    
-    try:
-        for match in PARAM.finditer(less):
-            param = {'name':  match.group('name'),
-                     'value': match.group('value')}
-                     
-            params.append(param)
-    except TypeError:
-        pass
-        
-    return params
 
 
 def parse_mixin(less, parent=None, **kwargs):
@@ -132,7 +89,15 @@ class Mixin(Rules):
         Rules.__init__(self, parent=parent, code=code, contents=contents)
     
         self.__name = name
-        self.__params = params
+        self.__params = list()
+        
+        for param in params:
+            param = Param(code=param['code'],
+                          name=param['name'],
+                          value=param['value'],
+                          parent=self)
+
+            self.__params.append(param)
         
     def __get_name(self):
         return self.__name

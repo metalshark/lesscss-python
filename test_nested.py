@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import unittest
 from nested import parse_nested
 
@@ -26,5 +30,16 @@ class TestNested(unittest.TestCase):
                          parse_nested(".b { :h { } } .t { ... } .c { ... } }"))
 
 
+def suite():
+    test_cases = (TestNested,)
+    
+    suite = unittest.TestSuite()
+    
+    for tests in map(unittest.TestLoader().loadTestsFromTestCase, test_cases):
+        suite.addTests(tests)
+
+    return suite
+
+
 if __name__ == '__main__':
-    unittest.main()
+    unittest.TextTestRunner(verbosity=2).run(suite())

@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 from accessor import parse_accessor
 from comment  import parse_comment
 from constant import parse_constant

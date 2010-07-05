@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import unittest
 from property import parse_property
 
@@ -13,6 +17,28 @@ class TestAccessor(unittest.TestCase):
         self.assertRaises(ValueError, parse_property, "#defaults[@width];")
 
 
+class TestContent(unittest.TestCase):
+    def setUp(self):
+        self.property = parse_property("content: '\0000A9';")
+        
+    def test_name(self):
+        self.assertEqual(self.property.name, 'content')
+        
+    def test_value(self):
+        self.assertEqual(self.property.value, "'\0000A9'")
+
+
+class TestContentURL(unittest.TestCase):
+    def setUp(self):
+        self.property = parse_property("content: url(/uri);")
+        
+    def test_name(self):
+        self.assertEqual(self.property.name, 'content')
+        
+    def test_value(self):
+        self.assertEqual(self.property.value, "url(/uri)")
+
+
 class TestFont(unittest.TestCase):
     def setUp(self):
         self.property = parse_property('''src: local('Vollkorn'),
@@ -26,28 +52,6 @@ format('truetype');''')
         self.assertEqual(self.property.value, '''local('Vollkorn'),
 url('http://themes.googleusercontent.com/font?kit=_3YMy3W41J9lZ9YHm0HVxA')
 format('truetype')''')
-
-
-class TestContent(unittest.TestCase):
-    def setUp(self):
-        self.property = parse_property("content: '\0000A9';")
-        
-    def test_name(self):
-        self.assertEqual(self.property.name, 'content');
-        
-    def test_value(self):
-        self.assertEqual(self.property.value, "'\0000A9'");
-
-
-class TestContentURL(unittest.TestCase):
-    def setUp(self):
-        self.property = parse_property("content: url(/uri);")
-        
-    def test_name(self):
-        self.assertEqual(self.property.name, 'content');
-        
-    def test_value(self):
-        self.assertEqual(self.property.value, "url(/uri)");
 
 
 class TestLength(unittest.TestCase):
@@ -68,5 +72,17 @@ url('http://themes.googleusercontent.com/font?kit=_3YMy3W41J9lZ9YHm0HVxA')
 format('truetype')''')
 
 
+def suite():
+    test_cases = (TestAccessor, TestContent, TestContentURL, TestFont,
+                  TestLength)
+    
+    suite = unittest.TestSuite()
+    
+    for tests in map(unittest.TestLoader().loadTestsFromTestCase, test_cases):
+        suite.addTests(tests)
+
+    return suite
+
+
 if __name__ == '__main__':
-    unittest.main()
+    unittest.TextTestRunner(verbosity=2).run(suite())

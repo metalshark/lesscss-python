@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import unittest
 from accessor import parse_accessor
 
@@ -16,5 +20,16 @@ class TestAccessor(unittest.TestCase):
                          "#defaults[@width]")
 
 
+def suite():
+    test_cases = (TestAccessor,)
+    
+    suite = unittest.TestSuite()
+    
+    for tests in map(unittest.TestLoader().loadTestsFromTestCase, test_cases):
+        suite.addTests(tests)
+
+    return suite
+
+
 if __name__ == '__main__':
-    unittest.main()
+    unittest.TextTestRunner(verbosity=2).run(suite())
