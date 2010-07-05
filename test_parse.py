@@ -33,8 +33,17 @@ class TestConstantDeclaration(unittest.TestCase):
                          '30px')
 
 
+class TestErrors(unittest.TestCase):
+    def parse_less(self, less):
+        parent = Rules(code=less)
+        parse(less=less, parent=parent)
+
+    def test_unclosed_block(self):
+        self.assertRaises(ValueError, self.parse_less, '.class { color: red;')
+
+
 def suite():
-    test_cases = (TestConstantDeclaration,)
+    test_cases = (TestConstantDeclaration, TestErrors)
     
     suite = unittest.TestSuite()
     

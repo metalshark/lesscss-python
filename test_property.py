@@ -17,6 +17,30 @@ class TestAccessor(unittest.TestCase):
         self.assertRaises(ValueError, parse_property, "#defaults[@width];")
 
 
+class TestAlpha(unittest.TestCase):
+    def setUp(self):
+        self.property = parse_property(\
+"filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='image.png');")
+        
+    def test_name(self):
+        self.assertEqual(self.property.name, 'filter')
+        
+    def test_value(self):
+        self.assertEqual(self.property.value, \
+"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='image.png')")
+
+
+class TestBracesInQuotes(unittest.TestCase):
+    def setUp(self):
+        self.property = parse_property('quotes: "{" "}";')
+        
+    def test_name(self):
+        self.assertEqual(self.property.name, 'quotes')
+        
+    def test_value(self):
+        self.assertEqual(self.property.value, '"{" "}"')
+
+
 class TestContent(unittest.TestCase):
     def setUp(self):
         self.property = parse_property("content: '\0000A9';")
@@ -30,13 +54,24 @@ class TestContent(unittest.TestCase):
 
 class TestContentURL(unittest.TestCase):
     def setUp(self):
-        self.property = parse_property("content: url(/uri);")
+        self.property = parse_property('content: url(/uri);')
         
     def test_name(self):
         self.assertEqual(self.property.name, 'content')
         
     def test_value(self):
-        self.assertEqual(self.property.value, "url(/uri)")
+        self.assertEqual(self.property.value, 'url(/uri)')
+
+
+class TestContentURLInQuotes(unittest.TestCase):
+    def setUp(self):
+        self.property = parse_property("content: url('/uri');")
+        
+    def test_name(self):
+        self.assertEqual(self.property.name, 'content')
+        
+    def test_value(self):
+        self.assertEqual(self.property.value, "url('/uri')")
 
 
 class TestFont(unittest.TestCase):
@@ -73,8 +108,8 @@ format('truetype')''')
 
 
 def suite():
-    test_cases = (TestAccessor, TestContent, TestContentURL, TestFont,
-                  TestLength)
+    test_cases = (TestAccessor, TestAlpha, TestBracesInQuotes, TestContent,
+                  TestContentURL, TestContentURLInQuotes, TestFont, TestLength)
     
     suite = unittest.TestSuite()
     
