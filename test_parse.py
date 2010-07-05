@@ -38,8 +38,32 @@ class TestErrors(unittest.TestCase):
         parent = Rules(code=less)
         parse(less=less, parent=parent)
 
+    def test_empty_param(self):
+        self.assertRaises(ValueError, self.parse_less, '.class (,) { }')
+
+    def test_non_mixin_id(self):
+        self.assertRaises(ValueError, self.parse_less, '.class { #content; }')
+
+    def test_non_mixin_selector(self):
+        self.assertRaises(ValueError, self.parse_less, '.class { content; }')
+
+    def test_non_mixin_wildcard(self):
+        self.assertRaises(ValueError, self.parse_less, '.class { *; }')
+
+    def test_trailing_param(self):
+        self.assertRaises(ValueError, self.parse_less, '.class (@param,) { }')
+
     def test_unclosed_block(self):
         self.assertRaises(ValueError, self.parse_less, '.class { color: red;')
+
+    def test_undeclared_constant(self):
+        self.assertRaises(ValueError, self.parse_less, '.class { @constant; }')
+
+    def test_unterminated_apos(self):
+        self.assertRaises(ValueError, self.parse_less, ".class { content: '; }")
+
+    def test_unterminated_string(self):
+        self.assertRaises(ValueError, self.parse_less, '.class { content: "; }')
 
 
 def suite():

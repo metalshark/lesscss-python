@@ -65,9 +65,15 @@ def parse_params(less):
             depth -= 1
             
         if not depth and (char == ',' or i == length - 1):
+            if char == ',' and i == length - 1:
+                raise ValueError('Trailing param comma')
+        
             match = PARAM.match(chunk)
             
-            name, value = match.group('name'), match.group('value')
+            try:
+                name, value = match.group('name'), match.group('value')
+            except AttributeError:
+                raise ValueError()
             
             if name and not value:
                 value = name
