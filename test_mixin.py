@@ -76,6 +76,13 @@ class TestDynamic(unittest.TestCase):
 
     def test_param_value(self):
         self.assertEqual(self.mixin.params[0].value, "'TitilliumText15L400wt'")
+        
+        
+class TestNestedParams(unittest.TestCase):
+    def test_escape_apos(self):
+        self.assertEqual(parse_mixin('''.mixin (@name: 'a\'', @b: 'b') {
+    display: none;
+}''').params[1].value, "'b'")
 
 
 class TestNoParams(unittest.TestCase):
@@ -131,8 +138,8 @@ class TestUsedParams(unittest.TestCase):
 
 def suite():
     test_cases = (TestBracedParams, TestDeclaredParams,
-                  TestDeclaredParamsWithDefaults, TestDynamic, TestNoParams,
-                  TestNotMixin, TestUsedParams)
+                  TestDeclaredParamsWithDefaults, TestDynamic, TestNestedParams,
+                  TestNoParams, TestNotMixin, TestUsedParams)
     
     suite = unittest.TestSuite()
     

@@ -55,7 +55,7 @@ def parse_params(less):
             chunk += char
         
         if delimiter:
-            if char == delimiter:
+            if char == delimiter and not less[i - 1] == '\\':
                 delimiter = ''
         elif char in ('"', "'"):
             delimiter = char

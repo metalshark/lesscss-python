@@ -31,7 +31,7 @@ def compile(less, path=None):
     return unicode(parsed)
 
 
-def parse(less, path, parent):
+def parse(less, parent, path=None):
     # get rid of whitespace at the end of the less code
     less = less.rstrip()
     
@@ -96,14 +96,17 @@ def parse(less, path, parent):
                     if contents:
                     
                         # parse the contents
-                        parse(contents, path, parent=parsed_item)
+                        parse(contents, parent=parsed_item, path=path)
                 
                 except AttributeError:
                 
                     pass
                         
                 # add the parsed item to its parent
-                parent.items.append(parsed_item)
+                try:
+                    parent.items.append(parsed_item)
+                except AttributeError:
+                    pass
                 
                 # then move on to the rest
                 break;
