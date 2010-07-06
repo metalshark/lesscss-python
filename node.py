@@ -17,6 +17,8 @@ class Node(object):
 
         selectors = self.selectors
 
+        media = self.get_media()
+
         for key in sorted(selectors.iterkeys()):
             selector = selectors[key]
 
@@ -26,6 +28,9 @@ class Node(object):
             if output:
                 output += '\n\n'
 
+            if media:
+                output += '@media %s {\n' % ', '.join(media)
+
             output += '%s {\n' % key
 
             for declaration in sorted(selector.iterkeys()):
@@ -34,6 +39,9 @@ class Node(object):
                 output += '  %s: %s;\n' % (declaration, value)
 
             output += '}'
+
+        if media:
+            output += '\n}'
 
         return output
 
@@ -97,6 +105,10 @@ class Node(object):
                 declarations[name] = value
 
         return declarations
+
+    def get_media(self):
+        if self.parent:
+            return self.parent.media
 
     def get_value(self, value):
         constants = self.constants

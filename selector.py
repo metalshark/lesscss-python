@@ -52,20 +52,6 @@ class Selector(Rules):
 
         self.__names = names
 
-    def __get_media(self):
-        media = list()
-
-        names = self.__names
-
-        if len(names) == 1:
-            name = names[0]
-
-            if name.startswith('@media '):
-                for media_type in name[len('@media '):].split(','):
-                    media.append(media_type.strip())
-
-        return media
-
     def __get_names(self):
         try:
             parent_names = self.parent.names
@@ -87,5 +73,18 @@ class Selector(Rules):
 
         return names
 
-    media = property(fget=__get_media)
+    def get_media(self):
+        media = list()
+
+        names = self.__names
+
+        if len(names) == 1:
+            name = names[0]
+
+            if name.startswith('@media '):
+                for media_type in name[len('@media '):].split(','):
+                    media.append(media_type.strip())
+
+        return media
+
     names = property(fget=__get_names)
