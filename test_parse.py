@@ -14,7 +14,7 @@ class TestConstantDeclaration(unittest.TestCase):
 
 * {
     @constant: 20px;
-    
+
     a {
         @constant: 30px;
     }
@@ -68,9 +68,9 @@ class TestErrors(unittest.TestCase):
 
 def suite():
     test_cases = (TestConstantDeclaration, TestErrors)
-    
+
     suite = unittest.TestSuite()
-    
+
     for tests in map(unittest.TestLoader().loadTestsFromTestCase, test_cases):
         suite.addTests(tests)
 
