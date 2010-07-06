@@ -24,13 +24,13 @@ def parse_selector(less, parent=None, **kwargs):
 
     if not match:
         raise ValueError()
-
+        
     names = match.group('names')
+    
+    if names.startswith('@media'):
+        raise ValueError
 
-    if names.startswith('@media '):
-        names = [names]
-    else:
-        names = [name.strip() for name in names.split(',')]
+    names = [name.strip() for name in names.split(',')]
 
     matched_length = len(match.group())
 
@@ -45,7 +45,7 @@ def parse_selector(less, parent=None, **kwargs):
 
 class Selector(Rules):
 
-    __slots__ = ['__names', 'items']
+    __slots__ = ('__names',)
 
     def __init__(self, parent, code, names=None, contents=None):
         Rules.__init__(self, parent=parent, code=code, contents=contents)
@@ -65,26 +65,11 @@ class Selector(Rules):
 
         for parent_name in parent_names:
             for name in self.__names:
-                if not parent_name.startswith('@media '):
-                    name = ' '.join((parent_name, name))
-                    name = name.replace(' &', '')
+                name = ' '.join((parent_name, name))
+                name = name.replace(' &', '')
 
                 names.append(name)
 
         return names
-
-    def get_media(self):
-        media = list()
-
-        names = self.__names
-
-        if len(names) == 1:
-            name = names[0]
-
-            if name.startswith('@media '):
-                for media_type in name[len('@media '):].split(','):
-                    media.append(media_type.strip())
-
-        return media
 
     names = property(fget=__get_names)

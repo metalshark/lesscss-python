@@ -6,6 +6,18 @@ import unittest
 from selector import parse_selector
 
 
+class TestMedia(unittest.TestCase):
+    def test_multi(self):
+        self.assertRaises(ValueError, parse_selector, '@media screen { }')
+        
+    def test_none(self):
+        self.assertRaises(ValueError, parse_selector, '@media { }')
+        
+    def test_single(self):
+        self.assertRaises(ValueError, parse_selector,
+                          '@media screen, print { }')
+
+
 class TestSelector(unittest.TestCase):
     def test_all(self):
         '''
@@ -37,13 +49,6 @@ class TestSelector(unittest.TestCase):
         '''
         self.assertEqual(parse_selector('#hash { }').names, ['#hash'])
 
-    def test_media(self):
-        '''
-        Media Declarations should be parsed.
-        '''
-        self.assertEqual(parse_selector('@media screen { }').names,
-                         ['@media screen'])
-
     def test_mixin(self):
         '''
         Mixin Declarations should be parsed.
@@ -56,13 +61,6 @@ class TestSelector(unittest.TestCase):
         '''
         self.assertEqual(parse_selector('a, b { }').names, ['a', 'b'])
 
-    def test_multi_media(self):
-        '''
-        Multiple Media Declarations should be parsed.
-        '''
-        self.assertEqual(parse_selector('@media screen, print { }').names,
-                         ['@media screen, print'])
-
     def test_nested(self):
         '''
         Nested Declarations should be parsed.
@@ -71,7 +69,7 @@ class TestSelector(unittest.TestCase):
 
 
 def suite():
-    test_cases = (TestSelector,)
+    test_cases = (TestMedia, TestSelector)
 
     suite = unittest.TestSuite()
 

@@ -6,6 +6,7 @@ from accessor import parse_accessor
 from comment  import parse_comment
 from constant import parse_constant
 from importer import parse_import
+from media    import parse_media
 from mixin    import parse_mixin
 from property import parse_property
 from rules    import Rules
@@ -16,6 +17,7 @@ PARSERS = (parse_accessor,
            parse_comment,
            parse_constant,
            parse_import,
+           parse_media,
            parse_mixin,
            parse_property,
            parse_selector)
