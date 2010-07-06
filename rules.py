@@ -16,20 +16,7 @@ class Rules(Node):
 
         self.__contents = contents
 
-    def __get_constants(self):
-        try:
-            constants = self.parent.constants
-        except AttributeError:
-            constants = dict()
-
-        for item in self.items:
-            if type(item) == Constant:
-                constants[item.name] = item.value
-
-        return constants
-
     def __get_contents(self):
         return self.__contents
 
-    constants    = property(fget=__get_constants)
-    contents     = property(fget=__get_contents)
+    contents = property(fget=__get_contents)

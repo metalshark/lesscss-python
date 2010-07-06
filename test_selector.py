@@ -41,7 +41,8 @@ class TestSelector(unittest.TestCase):
         '''
         Media Declarations should be parsed.
         '''
-        self.assertEqual(parse_selector('@media { }').names, ['@media'])
+        self.assertEqual(parse_selector('@media screen { }').names,
+                         ['@media screen'])
 
     def test_mixin(self):
         '''
@@ -54,6 +55,13 @@ class TestSelector(unittest.TestCase):
         Multiple Declarations should be parsed.
         '''
         self.assertEqual(parse_selector('a, b { }').names, ['a', 'b'])
+
+    def test_multi_media(self):
+        '''
+        Multiple Media Declarations should be parsed.
+        '''
+        self.assertEqual(parse_selector('@media screen, print { }').names,
+                         ['@media screen, print'])
 
     def test_nested(self):
         '''

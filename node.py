@@ -29,7 +29,7 @@ class Node(object):
             output += '%s {\n' % key
 
             for declaration in sorted(selector.iterkeys()):
-                value = selector[declaration]
+                value = self.get_value(selector[declaration])
 
                 output += '  %s: %s;\n' % (declaration, value)
 
@@ -39,6 +39,22 @@ class Node(object):
 
     def __get_code(self):
         return self.__code
+
+    def __get_constants(self):
+        try:
+            constants = self.parent.constants
+        except AttributeError:
+            constants = dict()
+
+        for item in self.items:
+            try:
+                name, value = item.name, item.value
+            except AttributeError:
+                pass
+            else:
+                constants[name] = value
+
+        return constants
 
     def __get_parent(self):
         return self.__parent
@@ -69,24 +85,6 @@ class Node(object):
 
         return selectors
 
-    def __get_statement(self):
-        pass
-
-    def __get_statements(self):
-        statements = list()
-
-        statements.append(self.statement)
-
-        for item in self.items:
-            for statement in item.statements:
-                statements.append(statement)
-
-        for statement in statements:
-            if not statement:
-                statements.remove(statement)
-
-        return statements
-
     def get_declarations(self, selector):
         declarations = dict()
 
@@ -100,8 +98,17 @@ class Node(object):
 
         return declarations
 
-    code       = property(fget=__get_code)
-    parent     = property(fget=__get_parent)
-    selectors  = property(fget=__get_selectors)
-    statement  = property(fget=__get_statement)
-    statements = property(fget=__get_statements)
+    def get_value(self, value):
+        constants = self.constants
+
+        try:
+            value = constants[value]
+        except KeyError:
+            pass
+
+        return value
+
+    code      = property(fget=__get_code)
+    constants = property(fget=__get_constants)
+    parent    = property(fget=__get_parent)
+    selectors = property(fget=__get_selectors)

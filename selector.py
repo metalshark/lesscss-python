@@ -25,8 +25,12 @@ def parse_selector(less, parent=None, **kwargs):
     if not match:
         raise ValueError()
 
-    names = [name.strip() for name in
-             match.group('names').split(',')]
+    names = match.group('names')
+
+    if names.startswith('@media '):
+        names = [names]
+    else:
+        names = [name.strip() for name in names.split(',')]
 
     matched_length = len(match.group())
 
@@ -48,6 +52,20 @@ class Selector(Rules):
 
         self.__names = names
 
+    def __get_media(self):
+        media = list()
+
+        names = self.__names
+
+        if len(names) == 1:
+            name = names[0]
+
+            if name.startswith('@media '):
+                for media_type in name[len('@media '):].split(','):
+                    media.append(media_type.strip())
+
+        return media
+
     def __get_names(self):
         try:
             parent_names = self.parent.names
@@ -61,10 +79,13 @@ class Selector(Rules):
 
         for parent_name in parent_names:
             for name in self.__names:
-                name = ' '.join((parent_name, name))
-                name = name.replace(' &', '')
+                if not parent_name.startswith('@media '):
+                    name = ' '.join((parent_name, name))
+                    name = name.replace(' &', '')
+
                 names.append(name)
 
         return names
 
-    names     = property(fget=__get_names)
+    media = property(fget=__get_media)
+    names = property(fget=__get_names)

@@ -81,9 +81,26 @@ class TestFontDeclarationCorruption(unittest.TestCase):
         self.assertEqual(str(self.parsed), self.css)
 
 
+class TestMedia(unittest.TestCase):
+    def setUp(self):
+        self.css = '''@media screen {
+@font-face {
+  font-family: 'Cantarell';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Cantarell'), url('http://themes.googleusercontent.com/font?kit=tGao7ZPoloMxQHxq-2oxNA') format('truetype');
+}
+}'''
+        self.parsed = Rules(code=self.css)
+        parse(less=self.css, parent=self.parsed)
+
+    def test_is_the_same(self):
+        self.assertEqual(str(self.parsed), self.css)
+
+
 def suite():
     test_cases = (TestConstantDeclaration, TestErrors,
-                  TestFontDeclarationCorruption)
+                  TestFontDeclarationCorruption, TestMedia)
 
     suite = unittest.TestSuite()
 
