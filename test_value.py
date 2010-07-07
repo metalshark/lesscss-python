@@ -37,6 +37,11 @@ class TestColour(unittest.TestCase):
 class TestDivision(unittest.TestCase):
     def test_colour(self):
         self.assertEqual(get_value('#888 / 4', {}), '#222')
+        
+        
+class TestMultiply(unittest.TestCase):
+    def test_colour(self):
+        self.assertEqual(get_value('#222 * 4', {}), '#888')
     
 
 class TestParse(unittest.TestCase):
@@ -54,8 +59,8 @@ class TestSubtraction(unittest.TestCase):
 
 
 def suite():
-    test_cases = (TestAddition, TestColour, TestDivision, TestParse,
-                  TestSubtraction)
+    test_cases = (TestAddition, TestColour, TestDivision, TestMultiply,
+                  TestParse, TestSubtraction)
     
     suite = unittest.TestSuite()
     
