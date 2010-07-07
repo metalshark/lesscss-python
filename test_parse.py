@@ -72,7 +72,9 @@ class TestFontDeclarationCorruption(unittest.TestCase):
   font-family: 'Cantarell';
   font-style: normal;
   font-weight: normal;
-  src: local('Cantarell'), url('http://themes.googleusercontent.com/font?kit=tGao7ZPoloMxQHxq-2oxNA') format('truetype');
+  src: local('Cantarell'), \
+url('http://themes.googleusercontent.com/font?kit=tGao7ZPoloMxQHxq-2oxNA') \
+format('truetype');
 }'''
         self.parsed = Rules(code=self.css)
         parse(less=self.css, parent=self.parsed)
@@ -88,7 +90,9 @@ class TestMedia(unittest.TestCase):
   font-family: 'Cantarell';
   font-style: normal;
   font-weight: normal;
-  src: local('Cantarell'), url('http://themes.googleusercontent.com/font?kit=tGao7ZPoloMxQHxq-2oxNA') format('truetype');
+  src: local('Cantarell'), \
+url('http://themes.googleusercontent.com/font?kit=tGao7ZPoloMxQHxq-2oxNA') \
+format('truetype');
 }
 }'''
         self.parsed = Rules(code=self.css)
@@ -96,6 +100,22 @@ class TestMedia(unittest.TestCase):
 
     def test_is_the_same(self):
         self.assertEqual(str(self.parsed), self.css)
+
+    def test_media_selector(self):
+        self.assertEqual(self.parsed.get_selectors(media=['screen']),
+                         {'@font-face': {'src': '''local('Cantarell'), \
+url('http://themes.googleusercontent.com/font?kit=tGao7ZPoloMxQHxq-2oxNA') \
+format('truetype')''',
+                                         'font-weight': 'normal',
+                                         'font-style': 'normal',
+                                         'font-family': "'Cantarell'"}})
+
+    def test_media_selectors(self):
+        self.assertEqual(self.parsed.get_media_selectors(),
+                         (None, ['screen']))
+
+    def test_none_selector(self):
+        self.assertEqual(self.parsed.get_selectors(), {})
 
 
 def suite():

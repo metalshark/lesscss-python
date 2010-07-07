@@ -15,25 +15,32 @@ class Node(object):
     def __str__(self):
         output = ''
 
-        selectors = self.get_selectors()
+        for media in self.get_media_selectors():
+            if media:
+                output += '@media %s {\n' % ', '.join(media)
+            
+            selectors = self.get_selectors(media=media)
 
-        for key in sorted(selectors.iterkeys()):
-            selector = selectors[key]
+            for key in sorted(selectors.iterkeys()):
+                selector = selectors[key]
 
-            if not selector:
-                continue
+                if not selector:
+                    continue
 
-            if output:
-                output += '\n\n'
+                if output and not output[-2:] == '{\n':
+                    output += '\n\n'
 
-            output += '%s {\n' % key
+                output += '%s {\n' % key
 
-            for declaration in sorted(selector.iterkeys()):
-                value = self.get_value(selector[declaration])
+                for declaration in sorted(selector.iterkeys()):
+                    value = self.get_value(selector[declaration])
 
-                output += '  %s: %s;\n' % (declaration, value)
+                    output += '  %s: %s;\n' % (declaration, value)
 
-            output += '}'
+                output += '}'
+                
+            if media:
+                output += '\n}'
 
         return output
 
@@ -55,6 +62,19 @@ class Node(object):
                 constants[name] = value
 
         return constants
+        
+    def __get_media(self):
+        try:
+            return self.__media
+        except AttributeError:
+            pass
+            
+        parent = self.parent
+            
+        if parent:
+            return parent.media
+        else:
+            return None
 
     def __get_parent(self):
         return self.__parent
@@ -71,27 +91,48 @@ class Node(object):
                 declarations[name] = value
 
         return declarations
+        
+    def get_media_selectors(self):
+        media_selectors = list()
+        
+        media_selectors.append(None)
+        
+        try:
+            media_selector = self.media
+        except AttributeError:
+            pass
+        else:
+            if media_selector not in media_selectors:
+                media_selectors.append(media_selector)
+        
+        for item in self.items:
+            for media_selector in item.get_media_selectors():
+                if media_selector not in media_selectors:
+                    media_selectors.append(media_selector)
+        
+        return tuple(media_selectors)
 
     def get_selectors(self, media=None):
         selectors = dict()
 
-        try:
-            names = self.names
-        except AttributeError:
-            pass
-        else:
-            for name in names:
-                try:
-                    selector = selectors[name]
-                except KeyError:
-                    selector = dict()
-                    selectors[name] = selector
+        if self.media == media:        
+            try:
+                names = self.names
+            except AttributeError:
+                pass
+            else:
+                for name in names:
+                    try:
+                        selector = selectors[name]
+                    except KeyError:
+                        selector = dict()
+                        selectors[name] = selector
 
-                declarations = self.get_declarations(name)
+                    declarations = self.get_declarations(name)
 
-                for key in declarations.iterkeys():
-                    value = declarations[key]
-                    selector[key] = value
+                    for key in declarations.iterkeys():
+                        value = declarations[key]
+                        selector[key] = value
 
         for item in self.items:
             selectors.update(item.get_selectors(media=media))
@@ -110,4 +151,5 @@ class Node(object):
 
     code      = property(fget=__get_code)
     constants = property(fget=__get_constants)
+    media     = property(fget=__get_media)
     parent    = property(fget=__get_parent)
