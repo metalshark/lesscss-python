@@ -32,8 +32,13 @@ class TestColour(unittest.TestCase):
         
     def test_triple_upper(self):
         self.assertEqual(get_colour('#AAAAAA'), '#aaa')
+        
+        
+class TestDivision(unittest.TestCase):
+    def test_colour(self):
+        self.assertEqual(get_value('#888 / 4', {}), '#222')
     
-    
+
 class TestParse(unittest.TestCase):
     def setUp(self):
         self.constants = {'@nice-blue': 'blue'}
@@ -49,7 +54,8 @@ class TestSubtraction(unittest.TestCase):
 
 
 def suite():
-    test_cases = (TestAddition, TestColour, TestParse, TestSubtraction)
+    test_cases = (TestAddition, TestColour, TestDivision, TestParse,
+                  TestSubtraction)
     
     suite = unittest.TestSuite()
     

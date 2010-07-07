@@ -207,7 +207,7 @@ VALUE = re.compile('''
         )
     |
         (?P<divide>
-            \\
+            /
         )
     |
         (?P<format>
@@ -302,6 +302,26 @@ def add(arg1, arg2):
     else:
         raise ValueError('%s cannot be added to %s' %
                          (arg1['type'], arg2['type']))
+          
+          
+def divide(arg1, arg2):
+    if arg1['type'] == 'colour' and arg2['type'] == 'number':
+        operand = int(arg2['value'])
+        
+        if operand == 0:
+            raise ZeroDivisionError()
+    
+        colour1_red, colour1_green, colour1_blue = get_rgb(arg1['value'])
+        
+        red   = colour1_red   / operand
+        green = colour1_green / operand
+        blue  = colour1_blue  / operand
+        
+        return get_colour_value(red, green, blue)
+        
+    else:
+        raise ValueError('%s cannot be divided by %s' %
+                         (arg1['type'], arg2['type']))
 
                          
 def get_colour(value):
@@ -364,6 +384,8 @@ def get_value(less, constants):
             
             if operator == 'add':
                 this_value = add(parsed[i], parsed[i + 2])
+            elif operator == 'divide':
+                this_value = divide(parsed[i], parsed[i + 2])
             elif operator == 'subtract':
                 this_value = subtract(parsed[i], parsed[i + 2])
         
@@ -446,5 +468,5 @@ def subtract(arg1, arg2):
         return get_colour_value(red, green, blue)
         
     else:
-        raise ValueError('%s cannot be added to %s' %
+        raise ValueError('%s cannot be subtracted from %s' %
                          (arg1['type'], arg2['type']))
