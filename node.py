@@ -15,7 +15,7 @@ class Node(object):
     def __str__(self):
         output = ''
 
-        selectors = self.selectors
+        selectors = self.get_selectors()
 
         for key in sorted(selectors.iterkeys()):
             selector = selectors[key]
@@ -59,7 +59,20 @@ class Node(object):
     def __get_parent(self):
         return self.__parent
 
-    def __get_selectors(self):
+    def get_declarations(self, selector):
+        declarations = dict()
+
+        for item in self.items:
+            try:
+                name, value = item.name, item.value
+            except AttributeError:
+                continue
+            else:
+                declarations[name] = value
+
+        return declarations
+
+    def get_selectors(self, media=None):
         selectors = dict()
 
         try:
@@ -81,22 +94,9 @@ class Node(object):
                     selector[key] = value
 
         for item in self.items:
-            selectors.update(item.selectors)
+            selectors.update(item.get_selectors(media=media))
 
         return selectors
-
-    def get_declarations(self, selector):
-        declarations = dict()
-
-        for item in self.items:
-            try:
-                name, value = item.name, item.value
-            except AttributeError:
-                continue
-            else:
-                declarations[name] = value
-
-        return declarations
 
     def get_value(self, value):
         constants = self.constants
@@ -111,4 +111,3 @@ class Node(object):
     code      = property(fget=__get_code)
     constants = property(fget=__get_constants)
     parent    = property(fget=__get_parent)
-    selectors = property(fget=__get_selectors)
