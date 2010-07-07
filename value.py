@@ -293,22 +293,11 @@ def add(arg1, arg2):
         colour1_red, colour1_green, colour1_blue = get_rgb(arg1['value'])
         colour2_red, colour2_green, colour2_blue = get_rgb(arg2['value'])
         
-        red = colour1_red + colour2_red
+        red   = colour1_red   + colour2_red
         green = colour1_green + colour2_green
-        blue = colour1_blue + colour2_blue
+        blue  = colour1_blue  + colour2_blue
         
-        if red > 255:
-            red = 255
-        if green > 255:
-            green = 255
-        if blue > 255:
-            blue = 255
-        
-        hex_red = hex(red)[2:]
-        hex_green = hex(green)[2:]
-        hex_blue = hex(blue)[2:]
-        
-        return '#%s%s%s' % (hex_red, hex_green, hex_blue)
+        return get_colour_value(red, green, blue)
         
     else:
         raise ValueError('%s cannot be added to %s' %
@@ -326,6 +315,14 @@ def get_colour(value):
         return value[0:4]
     
     return value
+    
+    
+def get_colour_value(red, green, blue):
+    hex_red   = hex(normalise_colour(red))
+    hex_green = hex(normalise_colour(green))
+    hex_blue  = hex(normalise_colour(blue))
+    
+    return '#%s%s%s' % (hex_red[2:], hex_green[2:], hex_blue[2:])
 
     
 def get_matched_value(match):
@@ -362,8 +359,13 @@ def get_value(less, constants):
             value += ' '
         
         if i != length - 1 \
-        and parsed[i + 1]['type'] == 'add':
-            this_value = add(parsed[i], parsed[i + 2])
+        and parsed[i + 1]['type'] in ('add', 'divide', 'multiply', 'subtract'):
+            operator = parsed[i + 1]['type']            
+            
+            if operator == 'add':
+                this_value = add(parsed[i], parsed[i + 2])
+            elif operator == 'subtract':
+                this_value = subtract(parsed[i], parsed[i + 2])
         
             i += 2
         else:
@@ -377,6 +379,15 @@ def get_value(less, constants):
         i += 1
     
     return value
+        
+        
+def normalise_colour(colour):
+    if colour < 0:
+        return 0
+    elif colour > 255:
+        return 255
+    else:
+        return colour
     
     
 def parse_value(less, constants):
@@ -421,3 +432,19 @@ def parse_value(less, constants):
         parsed.append({'type': group_name, 'value': value})
 
     return parsed
+          
+          
+def subtract(arg1, arg2):
+    if arg1['type'] == 'colour' and arg2['type'] == 'colour':
+        colour1_red, colour1_green, colour1_blue = get_rgb(arg1['value'])
+        colour2_red, colour2_green, colour2_blue = get_rgb(arg2['value'])
+        
+        red   = colour1_red   - colour2_red
+        green = colour1_green - colour2_green
+        blue  = colour1_blue  - colour2_blue
+        
+        return get_colour_value(red, green, blue)
+        
+    else:
+        raise ValueError('%s cannot be added to %s' %
+                         (arg1['type'], arg2['type']))

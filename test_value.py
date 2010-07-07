@@ -9,9 +9,6 @@ from value import get_colour, get_value, parse_value
 class TestAddition(unittest.TestCase):
     def test_colour(self):
         self.assertEqual(get_value('#111 + #111', {}), '#222')
-        
-    def test_example(self):
-        self.assertEqual(get_value('#5B83AD + #111', {}), '#6c94be')
 
 
 class TestColour(unittest.TestCase):
@@ -46,8 +43,13 @@ class TestParse(unittest.TestCase):
                          [{'type': 'colour', 'value': '#0000ff'}])
 
 
+class TestSubtraction(unittest.TestCase):
+    def test_colour(self):
+        self.assertEqual(get_value('#222 - #111', {}), '#111')
+
+
 def suite():
-    test_cases = (TestAddition, TestColour, TestParse)
+    test_cases = (TestAddition, TestColour, TestParse, TestSubtraction)
     
     suite = unittest.TestSuite()
     
