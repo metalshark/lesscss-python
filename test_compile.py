@@ -7,11 +7,47 @@ from lessc import compile
 
 
 class TestDocsExamples(unittest.TestCase):
+    def test_parse(self):
+        self.assertEqual(compile(u'div { width: 1 + 1 }'), u'div { width: 2; }')
+
+    def test_invoke1(self):
+        self.assertEqual(compile(u'a { color: blue }'), u'a { color: blue; }')
+
+    def test_invoke2(self):
+        self.assertEqual(compile(u'.post { color: blue }'),
+                         u'.post { color: blue; }')
+
     def test_variables(self):
         self.assertEqual(compile(u'''@nice-blue: #5B83AD;
 @light-blue: @nice-blue + #111;
 
 #header { color: @light-blue; }'''), u'#header { color: #6c94be; }')
+
+    def test_mixin(self):
+        self.assertEqual(compile(u'''.bordered {
+  border-top: dotted 1px black;
+  border-bottom: solid 2px black;
+}
+
+#menu a {
+  color: #111;
+  .bordered;
+}
+
+.post a {
+  color: red;
+  .bordered;
+}'''), '''#menu a {
+  border-bottom: solid 2px black;
+  border-top: dotted 1px black;
+  color: #111;
+}
+
+.post a {
+  border-bottom: solid 2px black;
+  border-top: dotted 1px black;
+  color: red;
+}''')
 
     def test_nested_rules(self):
         self.assertEqual(compile(u'''#header {

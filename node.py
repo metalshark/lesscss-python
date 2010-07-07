@@ -91,17 +91,32 @@ class Node(object):
     def __get_parent(self):
         return self.__parent
 
-    def get_declarations(self, selector):
+    def get_declarations(self):
         declarations = dict()
 
         for item in self.items:
             try:
                 name, value = item.name, item.value
             except AttributeError:
-                continue
+                pass
             else:
                 if name[0] != '@':
                     declarations[name] = value
+                continue
+                
+            try:
+                name, params = item.name, item.params
+            except AttributeError:
+                pass
+            else:
+                mixin = self.get_mixin(name, params)
+                
+                mixin_declarations = mixin.get_declarations()
+                
+                print name, mixin_declarations, mixin.code
+            
+                for declaration in mixin_declarations:
+                    declarations[declaration] = mixin_declarations[declaration]
 
         return declarations
         
@@ -124,6 +139,17 @@ class Node(object):
                     media_selectors.append(media_selector)
         
         return tuple(media_selectors)
+        
+    def get_mixin(self, name, params):
+        for item in self.items:
+            if hasattr(item, 'params'):
+                if item.name == name and item.contents:
+                    return item
+        
+        try:
+            return self.parent.get_mixin(name, params)
+        except AttributeError:
+            raise AssertionError('mixin %s could not be found' % name)
 
     def get_selectors(self, media=None):
         selectors = dict()
@@ -141,7 +167,7 @@ class Node(object):
                         selector = dict()
                         selectors[name] = selector
 
-                    declarations = self.get_declarations(name)
+                    declarations = self.get_declarations()
 
                     for key in declarations.iterkeys():
                         value = declarations[key]
