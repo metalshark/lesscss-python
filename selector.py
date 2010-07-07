@@ -65,7 +65,10 @@ class Selector(Rules):
 
         for parent_name in parent_names:
             for name in self.__names:
-                name = ' '.join((parent_name, name))
+                if name[0] == ':':
+                    name = parent_name + name
+                else:
+                    name = ' '.join((parent_name, name))
                 name = name.replace(' &', '')
 
                 names.append(name)

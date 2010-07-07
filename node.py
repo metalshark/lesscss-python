@@ -29,15 +29,23 @@ class Node(object):
 
                 if output and not output[-2:] == '{\n':
                     output += '\n\n'
-
-                output += '%s {\n' % key
-
-                for declaration in sorted(selector.iterkeys()):
+                    
+                keys = sorted(selector.keys())
+                
+                if len(keys) == 1:
+                    declaration = keys[0]
                     value = self.get_value(selector[declaration])
+                
+                    output += '%s { %s: %s; }' % (key, declaration, value)
+                else:
+                    output += '%s {\n' % key
 
-                    output += '  %s: %s;\n' % (declaration, value)
+                    for declaration in keys:
+                        value = self.get_value(selector[declaration])
 
-                output += '}'
+                        output += '  %s: %s;\n' % (declaration, value)
+
+                    output += '}'
                 
             if media:
                 output += '\n}'
