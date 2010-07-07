@@ -39,6 +39,11 @@ class TestBracesInQuotes(unittest.TestCase):
 
     def test_value(self):
         self.assertEqual(self.property.value, '"{" "}"')
+        
+        
+class TestConstant(unittest.TestCase):
+    def test_declaration(self):
+        self.assertRaises(ValueError, parse_property, '@var: white;')
 
 
 class TestContent(unittest.TestCase):
@@ -119,8 +124,8 @@ format('truetype')''')
 
 
 def suite():
-    test_cases = (TestAccessor, TestAlpha, TestBracesInQuotes, TestContent,
-                  TestContentURL, TestContentURLInQuotes, TestFont,
+    test_cases = (TestAccessor, TestAlpha, TestBracesInQuotes, TestConstant,
+                  TestContent, TestContentURL, TestContentURLInQuotes, TestFont,
                   TestFontFamily, TestLength)
 
     suite = unittest.TestSuite()

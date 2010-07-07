@@ -34,14 +34,14 @@ class Node(object):
                 
                 if len(keys) == 1:
                     declaration = keys[0]
-                    value = self.get_value(selector[declaration])
+                    value = selector[declaration]
                 
                     output += '%s { %s: %s; }' % (key, declaration, value)
                 else:
                     output += '%s {\n' % key
 
                     for declaration in keys:
-                        value = self.get_value(selector[declaration])
+                        value = selector[declaration]
 
                         output += '  %s: %s;\n' % (declaration, value)
 
@@ -67,7 +67,8 @@ class Node(object):
             except AttributeError:
                 pass
             else:
-                constants[name] = value
+                if name[0] == '@':
+                    constants[name] = value
 
         return constants
         
@@ -96,7 +97,8 @@ class Node(object):
             except AttributeError:
                 continue
             else:
-                declarations[name] = value
+                if name[0] != '@':
+                    declarations[name] = value
 
         return declarations
         
@@ -140,6 +142,7 @@ class Node(object):
 
                     for key in declarations.iterkeys():
                         value = declarations[key]
+                        value = self.get_value(value)
                         selector[key] = value
 
         for item in self.items:

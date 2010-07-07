@@ -33,6 +33,49 @@ class TestConstantDeclaration(unittest.TestCase):
                          '30px')
 
 
+class TestConstantScope(unittest.TestCase):
+    def setUp(self):
+        less = '''@var: red;
+
+#page {
+  @var: white;
+  #header {
+    color: @var; // white
+  }
+}'''
+        self.parsed = Rules(code=less)
+        parse(less=less, parent=self.parsed)
+        
+    def get_page(self):
+        for item in self.parsed.items:
+            try:
+                if item.names == ['#page']:
+                    return item
+            except AttributeError:
+                pass
+        else:
+            self.fail()
+        
+    def get_header(self):
+        for item in self.get_page().items:
+            try:
+                if item.names == ['#page #header']:
+                    return item
+            except AttributeError:
+                pass
+        else:
+            self.fail()
+
+    def test_root_value(self):
+        self.assertEqual(self.parsed.get_value('@var'), 'red')
+
+    def test_page_value(self):
+        self.assertEqual(self.get_page().get_value('@var'), 'white')
+
+    def test_header_value(self):
+        self.assertEqual(self.get_header().get_value('@var'), 'white')
+
+
 class TestErrors(unittest.TestCase):
     def parse_less(self, less):
         parent = Rules(code=less)
@@ -119,7 +162,7 @@ format('truetype')''',
 
 
 def suite():
-    test_cases = (TestConstantDeclaration, TestErrors,
+    test_cases = (TestConstantDeclaration, TestConstantScope, TestErrors,
                   TestFontDeclarationCorruption, TestMedia)
 
     suite = unittest.TestSuite()
