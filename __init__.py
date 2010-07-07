@@ -3,4 +3,4 @@
 
 
 __all__ = ('comment', 'constant', 'importer', 'lessc', 'media', 'mixin',
-           'nested', 'params', 'property', 'rules', 'selector')
+           'nested', 'params', 'property', 'rules', 'selector', 'value')

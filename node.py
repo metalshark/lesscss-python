@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 
+from value import get_value
+
+
 class Node(object):
 
     __slots__ = ('__code', '__parent', 'items')
@@ -150,15 +153,10 @@ class Node(object):
 
         return selectors
 
-    def get_value(self, value):
+    def get_value(self, less):
         constants = self.constants
 
-        try:
-            value = constants[value]
-        except KeyError:
-            pass
-
-        return value
+        return get_value(less, constants)
 
     code      = property(fget=__get_code)
     constants = property(fget=__get_constants)
