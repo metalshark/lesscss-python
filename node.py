@@ -112,8 +112,6 @@ class Node(object):
                 mixin = self.get_mixin(name, params)
                 
                 mixin_declarations = mixin.get_declarations()
-                
-                print name, mixin_declarations, mixin.code
             
                 for declaration in mixin_declarations:
                     declarations[declaration] = mixin_declarations[declaration]

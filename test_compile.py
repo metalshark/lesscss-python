@@ -73,16 +73,6 @@ class TestDocsExamples(unittest.TestCase):
 
 #header .navigation { font-size: 12px; }''')
 
-    def test_scope(self):
-        self.assertEqual(compile(u'''@var: red;
-
-#page {
-  @var: white;
-  #header {
-    color: @var; // white
-  }
-}'''), u'''#page #header { color: white; }''')
-
     def test_operations(self):
         self.assertEqual(compile(u'''@base: 5%;
 @filler: @base * 2;
@@ -112,6 +102,53 @@ class TestDocsExamples(unittest.TestCase):
 * {
     width: @var;
 }'''), u'* { width: 6px; }')
+
+    def _test_namespaces(self):
+        self.assertEqual(compile(u'''#bundle {
+  .button {
+    display: block;
+    border: 1px solid black;
+    background-color: grey;
+    :hover { background-color: white }
+  }
+  .tab { }
+  .citation { }
+}
+
+#header a {
+  color: orange;
+  #bundle > .button;
+}'''), u'''''')
+
+    def test_accessors(self):
+        self.assertEqual(compile(u'''#defaults {
+  @width: 960px;
+  @color: black;
+}
+
+.article { color: #294366; }
+
+.comment {
+  width: #defaults[@width];
+  color: .article['color'];
+}'''), u'''.article {
+  color: #294366;
+}
+
+.comment {
+  color: #294366;
+  width: 960px;
+}''')
+
+    def test_scope(self):
+        self.assertEqual(compile(u'''@var: red;
+
+#page {
+  @var: white;
+  #header {
+    color: @var; // white
+  }
+}'''), u'''#page #header { color: white; }''')
 
 
 def suite():
