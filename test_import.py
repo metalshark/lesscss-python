@@ -26,6 +26,19 @@ import unittest
 from importer import parse_import
 
 
+class TestImport(unittest.TestCase):
+    def setUp(self):
+        self.parsed = parse_import('@import "test_file.less";')
+        
+    def test_code(self):
+        self.assertEqual(self.parsed.code, '@import "test_file.less";')
+        
+    def test_less(self):
+        self.assertEqual(self.parsed.less, '''a {
+  text-decoration: none;
+}''')
+
+
 class TestURL(unittest.TestCase):
     def setUp(self):
         self.parsed = parse_import('@import url("fancyfonts.css") screen;')
@@ -38,7 +51,7 @@ class TestURL(unittest.TestCase):
 
 
 def suite():
-    test_cases = (TestURL,)
+    test_cases = (TestImport, TestURL)
     
     suite = unittest.TestSuite()
     

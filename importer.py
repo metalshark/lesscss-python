@@ -43,13 +43,15 @@ IMPORT = re.compile('''
                 .*?(?!\\\\)
             )
         \)
-        
+    )
+    
+    (
         \s*
-        
+    
         (?P<media>
             [a-z \s ,]*
         )
-    )
+    )?
     
     \s*
     
@@ -66,7 +68,7 @@ def read_file(filename, path):
 
     handle = file(filename)
     
-    return handle.read()
+    return handle.read().strip()
 
 
 def parse_import(less, parent=None, path=None, **kwargs):
@@ -76,6 +78,13 @@ def parse_import(less, parent=None, path=None, **kwargs):
         raise ValueError()
     
     code = match.group()
+    
+    media = [media.strip() for media in match.group('media').split(',')]
+        
+    media = tuple(media)
+    
+    if len(media) == 1 and media[0] == '':
+        media = None
         
     filename = match.group('filename')
     
@@ -85,13 +94,9 @@ def parse_import(less, parent=None, path=None, **kwargs):
         
         less = read_file(filename, path)
         
-        return Importer(parent, code, less)
+        return Importer(parent, code, less, media=media)
     else:
         url = match.group('url')
-        
-        media = [media.strip() for media in match.group('media').split(',')]
-        
-        media = tuple(media)
         
         return CSSImport(parent=parent, code=code, target=media, url=url)
         
@@ -116,16 +121,21 @@ class CSSImport(Node):
     url    = property(fget=__get_url)
 
 
-class Importer(object):
+class Importer(Node):
     
-    __slots__ = ('__less',)
+    __slots__ = ('__less', '__media')
     
-    def __init__(self, parent, code, less):
+    def __init__(self, parent, code, less, media):
         Node.__init__(self, parent=parent, code=code)
         
-        self.__less = less
+        self.__less  = less
+        self.__media = media
 
     def __get_less(self):
         return self.__less
+        
+    def __get_media(self):
+        return self.__media
 
-    less = property(fget=__get_less)
+    less  = property(fget=__get_less)
+    media = property(fget=__get_media)

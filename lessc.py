@@ -26,7 +26,7 @@ from accessor import parse_accessor
 from comment  import parse_comment
 from constant import parse_constant
 from importer import parse_import
-from media    import parse_media
+from media    import parse_media, Media
 from mixin    import parse_mixin
 from property import parse_property
 from rules    import Rules
@@ -99,11 +99,24 @@ def parse(less, parent, path=None):
                 # detect imports
                 try:
                 
-                    # add the less code in place with a safety gap inbetween
-                    less = parsed_item.less + '\n' + less
+                    imported_less = parsed_item.less
+                    
+                    media = parsed_item.media
+                    
+                    if media:
+                    
+                        imported_less = '@media %s {\n%s\n}' % \
+                                        (', '.join(media), imported_less)
+                
+                    if less:
+                
+                        # add a safety gap
+                        less += '\n'
+                        
+                    less += imported_less
                     
                     # then move on to the rest
-                    break;
+                    break
                     
                 except AttributeError:
                 

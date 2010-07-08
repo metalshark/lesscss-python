@@ -94,6 +94,17 @@ class TestConstantScope(unittest.TestCase):
 
     def test_header_value(self):
         self.assertEqual(self.get_header().get_value('@var'), 'white')
+        
+        
+class TestCSSImport(unittest.TestCase):
+    def setUp(self):
+        self.css = '@import url("fancyfonts.css") screen;'
+        self.parsed = Rules(code=self.css)
+        parse(less=self.css, parent=self.parsed)
+
+    def test_is_the_same(self):
+        self.assertEqual(str(self.parsed), self.css)
+
 
 
 class TestErrors(unittest.TestCase):
@@ -148,12 +159,24 @@ format('truetype');
         
 class TestImport(unittest.TestCase):
     def setUp(self):
-        self.css = '@import url("fancyfonts.css") screen;'
+        self.css = '@import "test_file";'
         self.parsed = Rules(code=self.css)
         parse(less=self.css, parent=self.parsed)
 
-    def test_is_the_same(self):
-        self.assertEqual(str(self.parsed), self.css)
+    def test_parse(self):
+        self.assertEqual(str(self.parsed), u'a { text-decoration: none; }')
+        
+        
+class TestMediaImport(unittest.TestCase):
+    def setUp(self):
+        self.css = '@import "test_file" screen;'
+        self.parsed = Rules(code=self.css)
+        parse(less=self.css, parent=self.parsed)
+
+    def test_parse(self):
+        self.assertEqual(str(self.parsed), u'''@media screen {
+a { text-decoration: none; }
+}''')
 
 
 class TestMedia(unittest.TestCase):
@@ -190,7 +213,7 @@ format('truetype')''',
     def test_none_selector(self):
         self.assertEqual(self.parsed.get_selectors(), {})
         
-        
+
 class TestNoMedia(unittest.TestCase):
     def setUp(self):
         self.css = '@media screen { }'
@@ -202,8 +225,9 @@ class TestNoMedia(unittest.TestCase):
 
 
 def suite():
-    test_cases = (TestConstantDeclaration, TestConstantScope, TestErrors,
-                  TestFontDeclarationCorruption, TestImport, TestMedia)
+    test_cases = (TestConstantDeclaration, TestConstantScope, TestCSSImport,
+                  TestErrors, TestFontDeclarationCorruption, TestImport,
+                  TestMedia, TestMediaImport, TestNoMedia)
 
     suite = unittest.TestSuite()
 
