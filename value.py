@@ -235,14 +235,7 @@ def add(arg1, arg2):
         num1, unit1 = get_number(arg1['value'])
         num2, unit2 = get_number(arg2['value'])
         
-        if unit1 and unit2 and unit1 != unit2:
-            raise ValueError('%s cannot be added to a %s' % unit1, unit2)
-        elif unit1:
-            unit = unit1
-        elif unit2:
-            unit = unit2
-        else:
-            unit = ''
+        unit = get_unit(unit1, unit2)
         
         num = num1 + num2
         
@@ -270,14 +263,7 @@ def divide(arg1, arg2):
         num1, unit1 = get_number(arg1['value'])
         num2, unit2 = get_number(arg2['value'])
         
-        if unit1 and unit2 and unit1 != unit2:
-            raise ValueError('%s cannot be divided by %s' % unit1, unit2)
-        elif unit1:
-            unit = unit1
-        elif unit2:
-            unit = unit2
-        else:
-            unit = ''
+        unit = get_unit(unit1, unit2)
         
         num = int(num1 / num2)
         
@@ -332,6 +318,17 @@ def get_rgb(colour):
     blue  = int(colour[5:7], 16)
     
     return red, green, blue
+    
+    
+def get_unit(unit1, unit2):
+    if unit1 and unit2 and unit1 != unit2:
+        raise ValueError('%s cannot be mixed with a %s' % unit1, unit2)
+    elif unit1:
+        return unit1
+    elif unit2:
+        return unit2
+    else:
+        return ''
 
 
 def get_value(less, constants):
@@ -391,14 +388,7 @@ def multiply(arg1, arg2):
         num1, unit1 = get_number(arg1['value'])
         num2, unit2 = get_number(arg2['value'])
         
-        if unit1 and unit2 and unit1 != unit2:
-            raise ValueError('%s cannot be multiplied by %s' % unit1, unit2)
-        elif unit1:
-            unit = unit1
-        elif unit2:
-            unit = unit2
-        else:
-            unit = ''
+        unit = get_unit(unit1, unit2)
         
         num = num1 * num2
         
@@ -471,7 +461,15 @@ def subtract(arg1, arg2):
         blue  = colour1_blue  - colour2_blue
         
         return get_colour_value(red, green, blue)
+    elif arg1['type'] == 'number' and arg2['type'] == 'number':
+        num1, unit1 = get_number(arg1['value'])
+        num2, unit2 = get_number(arg2['value'])
         
+        unit = get_unit(unit1, unit2)
+        
+        num = num1 - num2
+        
+        return '%i%s' % (num, unit)
     else:
         raise ValueError('%s cannot be subtracted from %s' %
                          (arg1['type'], arg2['type']))
