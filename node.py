@@ -37,12 +37,23 @@ class Node(object):
 
     def __str__(self):
         output = ''
+        
+        imports = self.get_imports()
+        
+        for url in imports.iterkeys():
+            if output:
+                output += '\n\n'
+                
+            output += '@import url(%s) %s;' % (url, ', '.join(imports[url]))
 
         for media in self.get_media_selectors():
+            selectors = self.get_selectors(media=media)
+        
+            if not selectors:
+                continue
+        
             if media:
                 output += '@media %s {\n' % ', '.join(media)
-            
-            selectors = self.get_selectors(media=media)
 
             for key in sorted(selectors.iterkeys()):
                 selector = selectors[key]
@@ -137,6 +148,30 @@ class Node(object):
                     declarations[declaration] = mixin_declarations[declaration]
 
         return declarations
+        
+    def get_imports(self):
+        try:
+            imports = self.parent.get_imports()
+        except AttributeError:
+            imports = dict()
+            
+        for item in self.items:
+            try:
+                target, url = item.target, item.url
+            except AttributeError:
+                pass
+            else:
+                try:
+                    targets = imports[url]
+                except KeyError:
+                    targets = list()
+                    imports[url] = targets
+                
+                for media in target:
+                    if media not in targets:
+                        targets.append(media)
+                        
+        return imports
         
     def get_media_selectors(self):
         media_selectors = list()

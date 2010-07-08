@@ -144,6 +144,16 @@ format('truetype');
 
     def test_is_the_same(self):
         self.assertEqual(str(self.parsed), self.css)
+        
+        
+class TestImport(unittest.TestCase):
+    def setUp(self):
+        self.css = '@import url("fancyfonts.css") screen;'
+        self.parsed = Rules(code=self.css)
+        parse(less=self.css, parent=self.parsed)
+
+    def test_is_the_same(self):
+        self.assertEqual(str(self.parsed), self.css)
 
 
 class TestMedia(unittest.TestCase):
@@ -179,11 +189,21 @@ format('truetype')''',
 
     def test_none_selector(self):
         self.assertEqual(self.parsed.get_selectors(), {})
+        
+        
+class TestNoMedia(unittest.TestCase):
+    def setUp(self):
+        self.css = '@media screen { }'
+        self.parsed = Rules(code=self.css)
+        parse(less=self.css, parent=self.parsed)
+
+    def test_is_the_same(self):
+        self.assertEqual(str(self.parsed), '')
 
 
 def suite():
     test_cases = (TestConstantDeclaration, TestConstantScope, TestErrors,
-                  TestFontDeclarationCorruption, TestMedia)
+                  TestFontDeclarationCorruption, TestImport, TestMedia)
 
     suite = unittest.TestSuite()
 

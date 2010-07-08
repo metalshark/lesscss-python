@@ -23,6 +23,7 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import os, re
+from node import Node
 
 
 IMPORT = re.compile('''
@@ -30,10 +31,24 @@ IMPORT = re.compile('''
     
     \s*
     
-    (?P<filename>
-        '[^']*?(?!\\\\)'
+    (
+        (?P<filename>
+            '.*?(?!\\\\)'
+        |
+            ".*?(?!\\\\)"
+        )
     |
-        "[^"]*?(?!\\\\)"
+        url\(
+            (?P<url>
+                .*?(?!\\\\)
+            )
+        \)
+        
+        \s*
+        
+        (?P<media>
+            [a-z \s ,]*
+        )
     )
     
     \s*
@@ -54,38 +69,63 @@ def read_file(filename, path):
     return handle.read()
 
 
-def parse_import(less, path, parent, **kwargs):
+def parse_import(less, parent=None, path=None, **kwargs):
     match = IMPORT.match(less)
     
     if not match:
         raise ValueError()
+    
+    code = match.group()
         
     filename = match.group('filename')
     
-    # strip the quotation marks around the filename
-    filename = filename[1:-1]
+    if filename:
+        # strip the quotation marks around the filename
+        filename = filename[1:-1]
+        
+        less = read_file(filename, path)
+        
+        return Importer(parent, code, less)
+    else:
+        url = match.group('url')
+        
+        media = [media.strip() for media in match.group('media').split(',')]
+        
+        media = tuple(media)
+        
+        return CSSImport(parent=parent, code=code, target=media, url=url)
+        
+        
+class CSSImport(Node):
+
+    __slots__ = ('__target', '__url')
     
-    code = match.group()
-    less = read_file(filename, path)
+    def __init__(self, parent, code, target, url):
+        Node.__init__(self, parent=parent, code=code)
+        
+        self.__target = target
+        self.__url    = url
+        
+    def __get_target(self):
+        return self.__target
+        
+    def __get_url(self):
+        return self.__url
     
-    return Importer(parent, code, less)
+    target = property(fget=__get_target)
+    url    = property(fget=__get_url)
 
 
 class Importer(object):
     
-    __slots__ = ('__code', '__less', '__parent')
+    __slots__ = ('__less',)
     
     def __init__(self, parent, code, less):
-        self.__parent = parent
-    
-        self.__code = code
+        Node.__init__(self, parent=parent, code=code)
+        
         self.__less = less
-        
-    def __get_code(self):
-        return self.__code
-        
+
     def __get_less(self):
         return self.__less
-        
-    code = property(fget=__get_code)
+
     less = property(fget=__get_less)

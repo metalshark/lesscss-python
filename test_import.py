@@ -23,26 +23,29 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-import test_accessor
-import test_compile
-import test_import
-import test_media
-import test_mixin
-import test_nested
-import test_parse
-import test_property
-import test_selector
-import test_value
+from importer import parse_import
+
+
+class TestURL(unittest.TestCase):
+    def setUp(self):
+        self.parsed = parse_import('@import url("fancyfonts.css") screen;')
+        
+    def test_media(self):
+        self.assertEqual(self.parsed.target, ('screen',))
+        
+    def test_url(self):
+        self.assertEqual(self.parsed.url, '"fancyfonts.css"')
 
 
 def suite():
-    test_suites = (test_accessor.suite(), test_compile.suite(),
-                   test_import.suite(), test_media.suite(), test_mixin.suite(),
-                   test_nested.suite(), test_parse.suite(),
-                   test_property.suite(), test_selector.suite(),
-                   test_value.suite())
+    test_cases = (TestURL,)
+    
+    suite = unittest.TestSuite()
+    
+    for tests in map(unittest.TestLoader().loadTestsFromTestCase, test_cases):
+        suite.addTests(tests)
 
-    return unittest.TestSuite(test_suites)
+    return suite
 
 
 if __name__ == '__main__':
