@@ -358,8 +358,15 @@ def get_value(less, constants):
                 this_value = multiply(parsed[i], parsed[i + 2])
             elif operator == 'subtract':
                 this_value = subtract(parsed[i], parsed[i + 2])
+                
+            parsed[i]['value'] = this_value
+            
+            for _ in range(2):
+                parsed.pop(i + 1)
         
-            i += 2
+            length -= 2
+            
+            continue
         else:
             this_value = item['value']
             

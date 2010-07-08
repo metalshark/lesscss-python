@@ -106,6 +106,13 @@ class TestDocsExamples(unittest.TestCase):
   width: 10%;
 }''')
 
+    def test_units(self):
+        self.assertEqual(compile(u'''@var: 1px + 5;
+
+* {
+    width: @var;
+}'''), u'* { width: 6px; }')
+
 
 def suite():
     test_cases = (TestDocsExamples,)
