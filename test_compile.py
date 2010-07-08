@@ -43,6 +43,11 @@ class TestDocsExamples(unittest.TestCase):
   color: #111;
 }
 
+.bordered {
+  border-bottom: solid 2px black;
+  border-top: dotted 1px black;
+}
+
 .post a {
   border-bottom: solid 2px black;
   border-top: dotted 1px black;

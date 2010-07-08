@@ -142,8 +142,16 @@ class Node(object):
         
     def get_mixin(self, name, params):
         for item in self.items:
-            if hasattr(item, 'params'):
-                if item.name == name and item.contents:
+            if hasattr(item, 'params') and item.name == name and item.contents:
+                return item
+                
+        for item in self.items:
+            try:
+                names = item.names
+            except AttributeError:
+                pass
+            else:
+                if name in names:
                     return item
         
         try:
