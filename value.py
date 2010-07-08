@@ -75,6 +75,9 @@ COLOURS = {'aliceblue':            '#f0f8ff', 'antiquewhite':         '#faebd7',
            'violet':               '#ee82ee', 'wheat':                '#f5deb3',
            'white':                '#ffffff', 'whitesmoke':           '#f5f5f5',
            'yellow':               '#ffff00', 'yellowgreen':          '#9acd32'}
+           
+           
+UNITS = ('%', 'in', 'cm', 'mm', 'em', 'ex', 'pt', 'pc', 'px')
 
 
 VALUE = re.compile('''
@@ -229,10 +232,21 @@ def add(arg1, arg2):
         
         return get_colour_value(red, green, blue)
     elif arg1['type'] == 'number' and arg2['type'] == 'number':
-        num1 = int(arg1['value'])
-        num2 = int(arg2['value'])
+        num1, unit1 = get_number(arg1['value'])
+        num2, unit2 = get_number(arg2['value'])
         
-        return str(num1 + num2)
+        if unit1 and unit2 and unit1 != unit2:
+            raise ValueError('%s cannot be added to a %s' % unit1, unit2)
+        elif unit1:
+            unit = unit1
+        elif unit2:
+            unit = unit2
+        else:
+            unit = ''
+        
+        num = num1 + num2
+        
+        return '%i%s' % (num, unit)
     else:
         raise ValueError('%s cannot be added to %s' %
                          (arg1['type'], arg2['type']))
@@ -252,7 +266,22 @@ def divide(arg1, arg2):
         blue  = colour1_blue  / operand
         
         return get_colour_value(red, green, blue)
+    elif arg1['type'] == 'number' and arg2['type'] == 'number':
+        num1, unit1 = get_number(arg1['value'])
+        num2, unit2 = get_number(arg2['value'])
         
+        if unit1 and unit2 and unit1 != unit2:
+            raise ValueError('%s cannot be divided by %s' % unit1, unit2)
+        elif unit1:
+            unit = unit1
+        elif unit2:
+            unit = unit2
+        else:
+            unit = ''
+        
+        num = int(num1 / num2)
+        
+        return '%i%s' % (num, unit)
     else:
         raise ValueError('%s cannot be divided by %s' %
                          (arg1['type'], arg2['type']))
@@ -289,6 +318,14 @@ def get_matched_value(match):
         raise AssertionError('Unable to find matched group')
         
         
+def get_number(number):
+    for unit in UNITS:
+        if number.endswith(unit):
+            return int(number[:-len(unit)]), unit
+    else:
+        return int(number), None
+        
+        
 def get_rgb(colour):
     red   = int(colour[1:3], 16)
     green = int(colour[3:5], 16)
@@ -314,7 +351,7 @@ def get_value(less, constants):
         
         if i != length - 1 \
         and parsed[i + 1]['type'] in ('add', 'divide', 'multiply', 'subtract'):
-            operator = parsed[i + 1]['type']            
+            operator = parsed[i + 1]['type']
             
             if operator == 'add':
                 this_value = add(parsed[i], parsed[i + 2])
@@ -350,7 +387,22 @@ def multiply(arg1, arg2):
         blue  = colour1_blue  * operand
         
         return get_colour_value(red, green, blue)
+    elif arg1['type'] == 'number' and arg2['type'] == 'number':
+        num1, unit1 = get_number(arg1['value'])
+        num2, unit2 = get_number(arg2['value'])
         
+        if unit1 and unit2 and unit1 != unit2:
+            raise ValueError('%s cannot be multiplied by %s' % unit1, unit2)
+        elif unit1:
+            unit = unit1
+        elif unit2:
+            unit = unit2
+        else:
+            unit = ''
+        
+        num = num1 * num2
+        
+        return '%i%s' % (num, unit)
     else:
         raise ValueError('%s cannot be multiplied by %s' %
                          (arg1['type'], arg2['type']))

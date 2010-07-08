@@ -83,6 +83,29 @@ class TestDocsExamples(unittest.TestCase):
   }
 }'''), u'''#page #header { color: white; }''')
 
+    def test_operations(self):
+        self.assertEqual(compile(u'''@base: 5%;
+@filler: @base * 2;
+@other: @base + @filler;
+@base-color: #222;
+
+* {
+  padding: @base;
+  width: @filler;
+  margin: @other;
+
+  color: #888 / 4;
+  background-color: @base-color + #111;
+  height: 100% / 2 + @filler;
+}'''), u'''* {
+  background-color: #333;
+  color: #222;
+  height: 60%;
+  margin: 15%;
+  padding: 5%;
+  width: 10%;
+}''')
+
 
 def suite():
     test_cases = (TestDocsExamples,)
