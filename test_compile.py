@@ -123,7 +123,7 @@ class TestDocsExamples(unittest.TestCase):
     width: @var;
 }'''), u'* { width: 6px; }')
 
-    def _test_namespaces(self):
+    def test_namespaces(self):
         self.assertEqual(compile(u'''#bundle {
   .button {
     display: block;
@@ -169,6 +169,13 @@ class TestDocsExamples(unittest.TestCase):
     color: @var; // white
   }
 }'''), u'''#page #header { color: white; }''')
+
+    def test_comments(self):
+        self.assertEqual(compile(u'''/* One hell of a comment */
+@var: red;
+
+// Get in line!
+@var: white;'''), '')
 
 
 def suite():
