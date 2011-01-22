@@ -23,24 +23,35 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from selector import parse_selector
+from lesscss.importer import parse_import
 
 
-class TestConstantDeclaration(unittest.TestCase):
+class TestImport(unittest.TestCase):
     def setUp(self):
-        self.selector = parse_selector('''* {
-    @constant: 10px;
+        self.parsed = parse_import('@import "test_file.less";')
+        
+    def test_code(self):
+        self.assertEqual(self.parsed.code, '@import "test_file.less";')
+        
+    def test_less(self):
+        self.assertEqual(self.parsed.less, '''a {
+  text-decoration: none;
 }''')
 
-    def test_count(self):
-        self.assertEqual(len(self.selector.constants), 1)
 
-    def test_value(self):
-        self.assertEqual(self.selector.constants['@constant'].value, '10px')
+class TestURL(unittest.TestCase):
+    def setUp(self):
+        self.parsed = parse_import('@import url("fancyfonts.css") screen;')
+        
+    def test_media(self):
+        self.assertEqual(self.parsed.target, ('screen',))
+        
+    def test_url(self):
+        self.assertEqual(self.parsed.url, '"fancyfonts.css"')
 
 
 def suite():
-    test_cases = (TestConstantDeclaration,)
+    test_cases = (TestImport, TestURL)
     
     suite = unittest.TestSuite()
     

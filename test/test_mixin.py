@@ -23,7 +23,7 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from mixin import parse_mixin
+from lesscss.mixin import parse_mixin
 
 
 NO_PARAMS = []

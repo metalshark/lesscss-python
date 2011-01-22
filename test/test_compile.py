@@ -23,7 +23,7 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from lessc import compile
+from lesscss.lessc import compile
 
 
 class TestDocsExamples(unittest.TestCase):

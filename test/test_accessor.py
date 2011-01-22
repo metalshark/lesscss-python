@@ -23,23 +23,25 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from media import parse_media
+from lesscss.accessor import parse_accessor
 
 
-class TestMedia(unittest.TestCase):
-    def test_multi(self):
-        self.assertEqual(parse_media('@media screen { }').media, ['screen'])
-        
-    def test_none(self):
-        self.assertRaises(ValueError, parse_media, '@media { }')
-        
-    def test_single(self):
-        self.assertEqual(parse_media('@media screen, print { }').media,
-                         ['screen', 'print'])
+class TestAccessor(unittest.TestCase):
+    def test_mixin(self):
+        self.assertEqual(parse_accessor('#bundle > .button;').accessor,
+                         '#bundle > .button')
+                         
+    def test_property(self):
+        self.assertEqual(parse_accessor(".article['color'];").accessor,
+                         ".article['color']")
+                         
+    def test_variable(self):
+        self.assertEqual(parse_accessor("#defaults[@width];").accessor,
+                         "#defaults[@width]")
 
 
 def suite():
-    test_cases = (TestMedia,)
+    test_cases = (TestAccessor,)
     
     suite = unittest.TestSuite()
     

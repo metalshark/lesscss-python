@@ -24,3 +24,5 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 __all__ = ('comment', 'constant', 'importer', 'lessc', 'media', 'mixin',
            'nested', 'params', 'property', 'rules', 'selector', 'value')
+
+__version__ = '0.1'

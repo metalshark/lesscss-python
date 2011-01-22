@@ -23,7 +23,7 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from value import get_colour, get_value, parse_value
+from lesscss.value import get_colour, get_value, parse_value
 
 
 class TestAddition(unittest.TestCase):

@@ -23,7 +23,7 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from selector import parse_selector
+from lesscss.selector import parse_selector
 
 
 class TestMedia(unittest.TestCase):

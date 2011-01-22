@@ -23,8 +23,8 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from lessc import parse
-from rules import Rules
+from lesscss.lessc import parse
+from lesscss.rules import Rules
 
 
 class TestConstantDeclaration(unittest.TestCase):
