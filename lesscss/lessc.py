@@ -151,3 +151,30 @@ def parse(less, parent, path=None):
         
             # report an error with the less code
             raise ValueError('Unable to read onwards from: %s' % less)
+
+
+if __name__ == '__main__':
+    import optparse
+    import sys
+    import traceback
+
+    from lesscss.contrib import console
+
+    usage = "usage: %prog [source [destination]]"
+    parser = optparse.OptionParser(usage=usage)
+    (options, argv) = parser.parse_args()
+
+    def main(argv):
+        source = open(argv[0]) if len(argv) > 0 else sys.stdin
+        destination = argv[1] if len(argv) > 1 else sys.stdout
+        output = console.Writer(destination)
+        output.write(compile(source.read()))
+
+    try:
+        main(argv)
+    except Exception, e:
+        console.Writer(sys.stderr).writeln(
+                traceback.format_exc() if __debug__
+                else str(e))
+        sys.exit(1)
+

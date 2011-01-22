@@ -47,4 +47,5 @@ setup(
     ],
     keywords = 'lesscss css stylesheet language',
     packages = ['lesscss'],
+    scripts=['lesscss/lessc.py'],
 )

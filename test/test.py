@@ -33,6 +33,7 @@ import test_parse
 import test_property
 import test_selector
 import test_value
+import test_lessc
 
 
 def suite():

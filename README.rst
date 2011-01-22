@@ -1,6 +1,40 @@
 A LessCSS Compiler in Python
 ============================
 
+LESS is an extension of CSS. You can write LESS code just like you would write
+CSS, except you need to compile it to CSS. That's what the package is for. 
+
+Installation
+------------
+
+Download and extract the distribution and then from the command prompt type::
+
+    $ python setup.py install
+
+Alternatively, if you have pip, you can download and install the package by
+typing the following command in the terminal::
+
+    $ pip install lesscss-python
+
+Using from the command-line
+---------------------------
+
+The command line tool is called `lessc.py`, and it looks something like this::
+
+    $ lessc.py source [destination]
+
+The source is the LESS file you want to compile, and the destination is the
+(optional) CSS file you want to compile it to::
+
+    $ lessc.py style.less style.css
+
+If you don't specify a destination, `lessc.py` will output to stdout::
+
+    $ lessc.py style.less
+
+Project status
+--------------
+
 Probably full of bugs with "potentially" all features apart from namespaces and
 accessors.
 
@@ -15,5 +49,5 @@ Open to anyone wanting to advance this project (it does not use a lexer/parser
 as such as it seemed more trouble than its worth to learn how they work in
 order to build this). 
 
-.. vim: filetype=rst
 .. _LessCSS: http://lesscss.org/
+.. vim: filetype=rst
