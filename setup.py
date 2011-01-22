@@ -26,7 +26,7 @@ from lesscss import __version__ as version
 read = lambda *xs: open(os.path.join(os.path.dirname(__file__), *xs)).read()
 
 setup(
-    name = 'lesscss',
+    name = 'lesscss-python',
     description = 'A LessCSS Compiler in Python',
     long_description = read('README.rst'),
     version = version,
