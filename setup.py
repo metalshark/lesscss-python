@@ -19,11 +19,16 @@ You should have received a copy of the GNU General Public License
 along with lesscss-python. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import os
 from distutils.core import setup
 from lesscss import __version__ as version
 
+read = lambda *xs: open(os.path.join(os.path.dirname(__file__), *xs)).read()
+
 setup(
     name = 'lesscss',
+    description = 'A LessCSS Compiler in Python',
+    long_description = read('README.rst'),
     version = version,
     author = 'Beech Horn',
     maintainer = 'Evgeny V. Generalov',
@@ -40,6 +45,6 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
-    keywords = 'lesscss',
+    keywords = 'lesscss css stylesheet language',
     packages = ['lesscss'],
 )
