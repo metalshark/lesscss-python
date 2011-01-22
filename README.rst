@@ -19,7 +19,7 @@ typing the following command in the terminal::
 Using from the command-line
 ---------------------------
 
-The command line tool is called `lessc.py`, and it looks something like this::
+Command line tool is called `lessc.py`, and is used like this::
 
     $ lessc.py source [destination]
 
@@ -28,7 +28,7 @@ The source is the LESS file you want to compile, and the destination is the
 
     $ lessc.py style.less style.css
 
-If you don't specify a destination, `lessc.py` will output to stdout::
+If you did't specify a destination, `lessc.py` will output to stdout::
 
     $ lessc.py style.less
 
