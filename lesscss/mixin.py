@@ -23,10 +23,10 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import re
-from nested   import parse_nested
-from params   import Param, parse_params
-from property import Property
-from rules    import Rules
+from lesscss.nested   import parse_nested
+from lesscss.params   import Param, parse_params
+from lesscss.property import Property
+from lesscss.rules    import Rules
 
 
 MIXIN = re.compile('''

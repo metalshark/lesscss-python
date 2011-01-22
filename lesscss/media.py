@@ -23,8 +23,8 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import re
-from nested import parse_nested
-from rules import Rules
+from lesscss.nested import parse_nested
+from lesscss.rules import Rules
 
 
 MEDIA = re.compile('''

@@ -23,8 +23,8 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import re
-from node import Node
-from property import Property
+from lesscss.node import Node
+from lesscss.property import Property
 
 
 CONSTANT = re.compile('''

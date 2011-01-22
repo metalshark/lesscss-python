@@ -22,15 +22,15 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-from accessor import parse_accessor
-from comment  import parse_comment
-from constant import parse_constant
-from importer import parse_import
-from media    import parse_media, Media
-from mixin    import parse_mixin
-from property import parse_property
-from rules    import Rules
-from selector import parse_selector
+from lesscss.accessor import parse_accessor
+from lesscss.comment  import parse_comment
+from lesscss.constant import parse_constant
+from lesscss.importer import parse_import
+from lesscss.media    import parse_media, Media
+from lesscss.mixin    import parse_mixin
+from lesscss.property import parse_property
+from lesscss.rules    import Rules
+from lesscss.selector import parse_selector
 
 
 PARSERS = (parse_accessor,

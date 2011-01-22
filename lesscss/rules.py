@@ -22,9 +22,9 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-from constant import Constant
-from node     import Node
-from property import Property
+from lesscss.constant import Constant
+from lesscss.node     import Node
+from lesscss.property import Property
 
 
 class Rules(Node):
