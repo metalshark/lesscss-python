@@ -46,6 +46,6 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     keywords = 'lesscss css stylesheet language',
-    packages = ['lesscss'],
+    packages = ['lesscss', 'lesscss.contrib'],
     scripts=['lesscss/lessc.py'],
 )
