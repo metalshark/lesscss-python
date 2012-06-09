@@ -1,0 +1,6 @@
+dist/
+MANIFEST
+._*
+.DS_Store
+*.egg-info
+*.pyc

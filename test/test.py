@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 
@@ -22,5 +22,29 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-__all__ = ('comment', 'constant', 'importer', 'lessc', 'media', 'mixin',
-           'nested', 'params', 'property', 'rules', 'selector', 'value')
+import unittest
+import test_accessor
+import test_compile
+import test_import
+import test_media
+import test_mixin
+import test_nested
+import test_parse
+import test_property
+import test_selector
+import test_value
+import test_lessc
+
+
+def suite():
+    test_suites = (test_accessor.suite(), test_compile.suite(),
+                   test_import.suite(), test_media.suite(), test_mixin.suite(),
+                   test_nested.suite(), test_parse.suite(),
+                   test_property.suite(), test_selector.suite(),
+                   test_value.suite())
+
+    return unittest.TestSuite(test_suites)
+
+
+if __name__ == '__main__':
+    unittest.TextTestRunner(verbosity=2).run(suite())

@@ -23,7 +23,7 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from nested import parse_nested
+from lesscss.nested import parse_nested
 
 
 class TestNested(unittest.TestCase):

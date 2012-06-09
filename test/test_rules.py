@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 
@@ -23,23 +23,24 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from media import parse_media
+from lesscss.selector import parse_selector
 
 
-class TestMedia(unittest.TestCase):
-    def test_multi(self):
-        self.assertEqual(parse_media('@media screen { }').media, ['screen'])
-        
-    def test_none(self):
-        self.assertRaises(ValueError, parse_media, '@media { }')
-        
-    def test_single(self):
-        self.assertEqual(parse_media('@media screen, print { }').media,
-                         ['screen', 'print'])
+class TestConstantDeclaration(unittest.TestCase):
+    def setUp(self):
+        self.selector = parse_selector('''* {
+    @constant: 10px;
+}''')
+
+    def test_count(self):
+        self.assertEqual(len(self.selector.constants), 1)
+
+    def test_value(self):
+        self.assertEqual(self.selector.constants['@constant'].value, '10px')
 
 
 def suite():
-    test_cases = (TestMedia,)
+    test_cases = (TestConstantDeclaration,)
     
     suite = unittest.TestSuite()
     

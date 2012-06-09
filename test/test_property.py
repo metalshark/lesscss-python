@@ -23,7 +23,7 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 
 
 import unittest
-from property import parse_property
+from lesscss.property import parse_property
 
 
 class TestAccessor(unittest.TestCase):

@@ -22,7 +22,7 @@ along with lesscss-python.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-from value import get_value
+from lesscss.value import get_value
 
 
 class Node(object):
