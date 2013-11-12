@@ -47,7 +47,9 @@ gaining full feature parity.
 
 Open to anyone wanting to advance this project (it does not use a lexer/parser
 as such as it seemed more trouble than its worth to learn how they work in
-order to build this). 
+order to build this). It may be better to investigate lesscpy_ instead, as it
+currently has more development activity.
 
 .. _LessCSS: http://lesscss.org/
+.. _lesscpy: /robotis/Lesscpy/
 .. vim: filetype=rst
