@@ -51,5 +51,5 @@ order to build this). It may be better to investigate lesscpy_ instead, as it
 currently has more development activity.
 
 .. _LessCSS: http://lesscss.org/
-.. _lesscpy: /robotis/Lesscpy/
+.. _lesscpy: https://github.com/robotis/Lesscpy/
 .. vim: filetype=rst
